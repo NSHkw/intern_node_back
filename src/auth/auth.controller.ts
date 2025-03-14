@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import { Controller, Get, Post, Body, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -20,7 +19,7 @@ export class AuthController {
 
   // 로그인
   @Post('login')
-  @ApiOperation({ summary: '로그인인', description: 'username, password를를 입력하세요.' })
+  @ApiOperation({ summary: '로그인', description: 'username, password를를 입력하세요.' })
   @ApiResponse({ status: 200, description: '로그인 성공' })
   @ApiResponse({ status: 401, description: '아이디 또는 비밀번호가 올바르지 않습니다.' })
   login(@Body() loginDto: LoginDto) {

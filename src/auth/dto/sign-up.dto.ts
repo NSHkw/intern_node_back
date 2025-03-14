@@ -1,4 +1,3 @@
-// src/auth/dto/sign-up.dto.ts
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class SignUpDto {

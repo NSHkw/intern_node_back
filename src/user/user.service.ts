@@ -1,4 +1,3 @@
-// src/user/user.service.ts
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { SignUpDto } from 'src/auth/dto/sign-up.dto';
 import { ConfigService } from '@nestjs/config';
