@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LoginDto } from './dto/login.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller()
 export class AuthController {
@@ -13,7 +14,9 @@ export class AuthController {
   @ApiOperation({ summary: '회원가입', description: 'username, password, nickname을 입력하세요.' })
   @ApiResponse({ status: 201, description: '회원가입 성공' })
   @ApiResponse({ status: 409, description: '이미 가입된 사용자입니다.' })
-  signup(@Body() signupDto: SignUpDto) {
+  signup(
+    @Body() signupDto: SignUpDto,
+  ): Promise<Partial<User> | { error: { code: string; message: string } }> {
     return this.authService.signup(signupDto);
   }
 
@@ -22,7 +25,7 @@ export class AuthController {
   @ApiOperation({ summary: '로그인', description: 'username, password를를 입력하세요.' })
   @ApiResponse({ status: 200, description: '로그인 성공' })
   @ApiResponse({ status: 401, description: '아이디 또는 비밀번호가 올바르지 않습니다.' })
-  login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     return this.authService.login(loginDto);
   }
 
@@ -76,7 +79,9 @@ export class AuthController {
     },
   })
   @Get('verify')
-  verifyToken(@Headers('TOKEN') token: string) {
+  verifyToken(
+    @Headers('TOKEN') token: string,
+  ): Promise<{ token: string; decodedToken: any } | { error: { code: string; message: string } }> {
     return this.authService.verifyToken(token);
   }
 }

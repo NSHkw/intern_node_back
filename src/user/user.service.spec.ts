@@ -15,7 +15,7 @@ describe('UserService', () => {
   let userService: UserService;
   let userRepository: Repository<User>;
 
-  const mockUserRepository = {
+  const mockUser = {
     findOne: jest.fn(),
     save: jest.fn(),
     create: jest.fn((dto) => dto),
@@ -29,7 +29,7 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
-        { provide: getRepositoryToken(User), useValue: mockUserRepository },
+        { provide: getRepositoryToken(User), useValue: mockUser },
         { provide: ConfigService, useValue: mockConfigService },
       ],
     }).compile();
@@ -50,19 +50,19 @@ describe('UserService', () => {
         nickname: 'test nickname',
       };
 
-      mockUserRepository.findOne.mockResolvedValue(null);
-      mockUserRepository.create.mockReturnValue(signUpDto);
-      mockUserRepository.save.mockResolvedValue(signUpDto);
+      mockUser.findOne.mockResolvedValue(null);
+      mockUser.create.mockReturnValue(signUpDto);
+      mockUser.save.mockResolvedValue(signUpDto);
 
       const result = await userService.create(signUpDto);
 
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { username: 'test user' } });
-      expect(mockUserRepository.create).toHaveBeenCalledWith({
+      expect(mockUser.findOne).toHaveBeenCalledWith({ where: { username: 'test user' } });
+      expect(mockUser.create).toHaveBeenCalledWith({
         username: 'test user',
         password: 'hashedPassword',
         nickname: 'test nickname',
       });
-      expect(mockUserRepository.save).toHaveBeenCalled();
+      expect(mockUser.save).toHaveBeenCalled();
       expect(result).toEqual({ username: 'test user', nickname: 'test nickname' });
       expect(bcrypt.hash).toHaveBeenCalledWith('testPassword', 10);
     });
@@ -74,10 +74,10 @@ describe('UserService', () => {
         nickname: 'test nickname',
       };
 
-      mockUserRepository.findOne.mockResolvedValue(signUpDto);
+      mockUser.findOne.mockResolvedValue(signUpDto);
 
       await expect(userService.create(signUpDto)).rejects.toThrow(ConflictException);
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { username: 'existing' } });
+      expect(mockUser.findOne).toHaveBeenCalledWith({ where: { username: 'existing' } });
     });
   });
 });
