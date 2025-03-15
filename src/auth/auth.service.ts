@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,12 +14,14 @@ export class AuthService {
   ) {}
 
   // 회원가입
-  async signup(signUpDto: SignUpDto) {
+  async signup(
+    signUpDto: SignUpDto,
+  ): Promise<Partial<User> | { error: { code: string; message: string } }> {
     return this.userService.create(signUpDto);
   }
 
   // 로그인
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { username, password } = loginDto;
 
     const user = await this.userService.findByUsername(username);
@@ -50,7 +53,9 @@ export class AuthService {
   }
 
   // 토큰 확인
-  async verifyToken(token: string) {
+  async verifyToken(
+    token: string,
+  ): Promise<{ token: string; decodedToken: any } | { error: { code: string; message: string } }> {
     try {
       const decodedToken = this.jwtService.verify(token);
 

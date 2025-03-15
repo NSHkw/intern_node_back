@@ -29,7 +29,7 @@ export class UserService {
       });
     }
 
-    const hashRound = this.config.get<number>('HASH_ROUND');
+    const hashRound = this.config.get<number>('HASH_ROUND') || 10;
     Logger.log(hashRound);
     Logger.log(typeof hashRound);
 
