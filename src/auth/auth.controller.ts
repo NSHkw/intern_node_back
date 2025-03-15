@@ -39,7 +39,7 @@ export class AuthController {
       token: 'your-token',
       decodedToken: {
         username: 'user123',
-        sub: 123, // id
+        sub: 123,
         iat: 1630303020,
         exp: 1630389420,
       },

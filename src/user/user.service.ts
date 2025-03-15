@@ -18,9 +18,7 @@ export class UserService {
   ): Promise<Partial<User> | { error: { code: string; message: string } }> {
     const { username, password, nickname } = signUpDto;
 
-    const existingUser = await this.userRepository.findOne({
-      where: { username },
-    });
+    const existingUser = await this.findByUsername(username);
 
     if (existingUser) {
       throw new ConflictException({
